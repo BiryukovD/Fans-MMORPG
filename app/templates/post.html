@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}
+{{post.title}}
+{% endblock title %}
+{% block content %}
+<h1 align="center">{{post.title}}</h1>
+<p align="justify">{{post.content|safe}} </p>
+<h6 align="right">{{ post.time_in |date:'d M Y' }}</h6>
+
+
+<form method="post" align="center" style="margin-top: 50px; margin-bottom: 100px; ">
+    {% csrf_token %}
+    <input name="text_of_message" type="text" style="width: 1000px; height: 200px">
+    <input type="submit" value="Отправить сообщение автору">
+
+</form>
+{% endblock content %}
