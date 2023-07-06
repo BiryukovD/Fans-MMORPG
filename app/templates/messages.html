@@ -5,41 +5,68 @@
 {% load custom_tags %}
 
 {% block content %}
- <h1 align="center">Все сообщения</h1>
+<h1 align="center">Мои сообщения</h1>
 
-   <hr >
-   {% if messages %}
-       <table align="center" width="1200">
+<hr>
+   <form action="" method="get">
+       {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
+       {{ filterset.form.as_p }}
+       {# Добавим кнопку отправки данных формы #}
+       <input type="submit" value="Найти" />
+   </form>
 
-           {% for message in messages %}
-           <tr>
-             <td align="center">  <img src="{{ post.picture.url }}" alt="Not Found" width="600px"></td>
-               <td align="center">{{ message.text |date:'d M Y' }}</td>
-               <td align="center">{{ message.time_in |date:'d M Y' }}</td>
-           </tr>
-           {% endfor %}
+{% if messages %}
+<table align="center" width="1200">
 
-       </table>
-   {% else %}
-       <h2>Сообщений нет!</h2>
-   {% endif %}
+    {% for message in messages %}
+    <tr>
+        <td align="center"><img src="{{ message.user.picture.url }}" alt="Not Found" width="200px"></td>
+        <td align="center">{{ message.user.username }}</td>
+        <td align="center">{{ message.post.title }}</td>
+        <td align="center">{{ message.text }}</td>
+        <td align="center">{{ message.time_in |date:'d M Y' }}</td>
+        {% if not message.is_read %}
+        <td>
+            <form action="{% url 'mark_as_read' message.id  %}" method="post" align="center" style="margin-top: 50px; margin-bottom: 100px; ">
+                {% csrf_token %}
+                <input type="submit" value="Принять сообщение">
+            </form>
+        </td>
+
+        {% endif %}
+        {% if message.is_read %}
+        <td align="center">
+            <form action="{% url 'delete_message' message.id  %}"  method="post" align="center" style="margin-top: 50px; margin-bottom: 100px; ">
+                {% csrf_token %}
+                <input type="submit" value="Удалить">
+
+            </form>
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+
+</table>
+{% else %}
+<h2>Сообщений нет!</h2>
+{% endif %}
 
 {% if page_obj.has_previous %}
-       {# Для каждой ссылки пагинации указываем обработку через новый тег #}
-       <a href="?{% url_replace page=1 %}">1</a>
-       {% if page_obj.previous_page_number != 1 %}
-           ... <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
-       {% endif %}
-   {% endif %}
+{# Для каждой ссылки пагинации указываем обработку через новый тег #}
+<a href="?{% url_replace page=1 %}">1</a>
+{% if page_obj.previous_page_number != 1 %}
+... <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+{% endif %}
+{% endif %}
 
-   {{ page_obj.number }}
+{{ page_obj.number }}
 
-   {% if page_obj.has_next %}
-       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
-       {% if paginator.num_pages != page_obj.next_page_number %}
-           ...
-           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
-       {% endif %}
-   {% endif %}
+{% if page_obj.has_next %}
+<a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+{% if paginator.num_pages != page_obj.next_page_number %}
+...
+<a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+{% endif %}
+{% endif %}
 
 {% endblock content %}

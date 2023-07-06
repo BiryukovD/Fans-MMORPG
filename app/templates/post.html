@@ -4,14 +4,20 @@
 {% endblock title %}
 {% block content %}
 <h1 align="center">{{post.title}}</h1>
+<p align="right">Автор</p>
+<img align="right" src="{{ post.user.picture.url }}" alt="Not Found" width="200px">
+<p align="right">{{post.user.username}} </p>
 <p align="justify">{{post.content|safe}} </p>
 <h6 align="right">{{ post.time_in |date:'d M Y' }}</h6>
 
 
+
+{% if post.user_id != user.id  %}
 <form method="post" align="center" style="margin-top: 50px; margin-bottom: 100px; ">
     {% csrf_token %}
     <input name="text_of_message" type="text" style="width: 1000px; height: 200px">
     <input type="submit" value="Отправить сообщение автору">
 
 </form>
+{% endif %}
 {% endblock content %}

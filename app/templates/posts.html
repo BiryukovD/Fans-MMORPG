@@ -22,7 +22,7 @@
              <td align="center">  <img src="{{ post.picture.url }}" alt="Not Found" width="600px"></td>
                <td align="center"><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></td>
                <td align="center">{{ post.time_in |date:'d M Y' }}</td>
-               <td align="center">{{ post.content |truncatechars:20 }}</td>
+               <td align="center">{{ post.content |safe|truncatechars:20 }}</td>
            </tr>
            {% endfor %}
 
