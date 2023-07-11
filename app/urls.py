@@ -17,7 +17,6 @@ urlpatterns = [
     path('deletemessage/<int:pk>', views.delete_message, name='delete_message'),
     path('markasread/<int:pk>', views.mark_as_read, name='mark_as_read'),
 
-
 ]
 
 if settings.DEBUG:

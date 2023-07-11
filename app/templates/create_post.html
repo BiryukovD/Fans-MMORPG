@@ -7,11 +7,50 @@
 
 
 {% block content %}
-<h1 align="center" >Добавление статьи</h1>
-<form enctype="multipart/form-data" method="post" action="">
-  {% csrf_token %}
-  {{ form }}
-  <input type="submit" value="Save"/>
+
+<div class="container">
+    <h1 align="center" style="font-family: Georgia, serif;">Добавление статьи</h1>
+    <form enctype="multipart/form-data" method="post" action="">
+        {% csrf_token %}
+
+        <div class="row gy-5">
+            <div class="col">
+                <div class="p-3">{{ form.title}}</div>
+            </div>
+        </div>
+
+
+        <div class="p-3">{{ form.content}}</div>
+
+
+        <div class="container">
+            <label for="id_picture" class="drop-container" id="dropcontainer">
+                <span class="drop-title">Перетащите обложку статьи в область</span>
+                или
+
+                <input type="file" name="picture" accept="image/*" required="" id="id_picture">
+            </label>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col">
+                <div class="p-3">{{ form.category}}</div>
+            </div>
+
+            <div class="col">
+                <div class="p-3" align="right">
+                    <button class="btn btn-primary">Опубликовать</button>
+                </div>
+            </div>
+        </div>
+
+</div>
+
 </form>
 
+
 {% endblock content %}
+
+

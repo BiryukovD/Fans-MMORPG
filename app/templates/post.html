@@ -1,23 +1,65 @@
 {% extends 'base.html' %}
+
 {% block title %}
 {{post.title}}
 {% endblock title %}
 {% block content %}
-<h1 align="center">{{post.title}}</h1>
-<p align="right">Автор</p>
-<img align="right" src="{{ post.user.picture.url }}" alt="Not Found" width="200px">
-<p align="right">{{post.user.username}} </p>
-<p align="justify">{{post.content|safe}} </p>
-<h6 align="right">{{ post.time_in |date:'d M Y' }}</h6>
+
+
+<div class="container">
+  <!-- Сложите колонки на мобильном устройстве, сделав одну полную, а другую половинную -->
+
+
+  <div class="row">
+    <div class="col-md-10" style="font-family: Georgia, serif;"><h1 align="center">{{post.title}}</h1></div>
+    <div class="col-6 col-md-2" style="font-family: Georgia, serif;"><h4 align="center">Автор: {{post.user.username}}</h4></div>
+</div>
+
+  <div class="row">
+    <div class="col-md-10">{{post.content|safe}}</div>
+    <div class="col-6 col-md-2"><img src="{{ post.user.picture.url }}" alt="Not Found" width="200px"></div>
+</div>
+
+  <div class="row">
+    <div class="col-md-10" align="right">{{ post.time_in |date:'d M Y' }}</div>
+    <div class="col-6 col-md-2"></div>
+</div>
+
+
 
 
 
 {% if post.user_id != user.id  %}
-<form method="post" align="center" style="margin-top: 50px; margin-bottom: 100px; ">
-    {% csrf_token %}
-    <input name="text_of_message" type="text" style="width: 1000px; height: 200px">
-    <input type="submit" value="Отправить сообщение автору">
+<div class="container px-4 text-center">
+    <form method="post" align="center" style="margin-top: 50px; margin-bottom: 100px; ">
+          {% csrf_token %}
+  <div class="row gx-5">
+    <div class="col-md-12">
+     <div class="p-3">    <textarea name="text_of_message" class="form-control" placeholder="Сообщение для автора статьи" aria-label="Имя пользователя получателя" aria-describedby="button-addon2" ></textarea>
+</div>
+    </div>
+    <div class="col-6 col-md-1">
+
+    </div>
+  </div>
+
+      <div class="row gx-5">
+    <div class="col-md-5">
+     <div class="p-3"> </div>
+    </div>
+    <div class="col-6 col-md-1">
+      <div class="p-3"><button class="btn btn-outline-primary">Отправить</button></div>
+    </div>
+  </div>
+
+
+
 
 </form>
+</div>
 {% endif %}
+
+
+</div>
+
 {% endblock content %}

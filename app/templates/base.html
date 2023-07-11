@@ -1,11 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     {{ form.media }}
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% load static %}
+     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    {{ form.media }}
     <meta charset="UTF-8">
     <title>{% block title%}{% endblock title%}</title>
 </head>
 <body>
+
+
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid" style="font-family: system-ui; serif; font-size: 18px; ">
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'posts' %}" >Главная</a>
+        </li>
+
+        {% if not user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'account_login' %}">Вход</a>
+        </li>
+           <li class="nav-item">
+          <a class="nav-link" href="{% url 'account_signup' %}">Регистрация</a>
+        </li>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+
+           <li class="nav-item">
+          <a class="nav-link" href="{% url 'my_posts' %}">Мои статьи</a>
+        </li>
+                   <li class="nav-item">
+          <a class="nav-link" href="{% url 'create_post' %}">Создать статью</a>
+        </li>
+
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'messages' %}">Мои сообщения {% if number_messages_of_user %}<span style="height: 25px; width: 30px; border-radius: 50%;display: inline-block;">
+                      +{{ number_messages_of_user }}</span>{% endif %}</a>
+              </li>
+
+          </a>
+          </a>
+
+
+
+
+
+
+              <li class="nav-item">
+          <a class="nav-link" href="{% url 'account_logout' %}">Выход</a>
+        </li>
+
+        {% endif %}
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
 {% block content %}{% endblock content%}
-</body>
+
+
+
+
+
+
+
+
 </html>

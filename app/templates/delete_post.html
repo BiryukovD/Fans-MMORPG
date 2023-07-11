@@ -4,11 +4,11 @@
 
 
 {% block content %}
-<h1 align="center">Удаление статьи</h1>
+<h1 align="center" style="font-family: Georgia, serif;">Удаление статьи</h1>
 <form align="center" action="" method="post">
   {% csrf_token %}
   <p>Вы уверены, что хотите удалить "{{object.title}}"?</p>
-  <input type="submit" value="Delete"/>
+  <button class="btn btn-outline-primary">Удалить</button>
 </form>
 
 {% endblock content %}

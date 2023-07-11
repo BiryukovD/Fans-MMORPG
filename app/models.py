@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.urls import reverse
 from tinymce.models import HTMLField
 
 
@@ -44,6 +45,7 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
 
 
 class Message(models.Model):

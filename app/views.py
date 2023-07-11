@@ -16,7 +16,7 @@ class PostList(ListView):
     template_name = 'posts.html'
     context_object_name = 'posts'
     ordering = 'time_in'
-    paginate_by = 3
+    paginate_by = 5
 
 
 class PostDetail(DetailView):
@@ -25,32 +25,49 @@ class PostDetail(DetailView):
     context_object_name = 'post'
 
     def post(self, request, *args, **kwargs):
-        text_of_message = self.request.POST.get('text_of_message', 'Undefinded')
-        from datetime import datetime
-        current_datetime = datetime.now()
-        Message.objects.create(text=text_of_message, user_id=self.request.user.pk, post_id=self.get_object().pk,
-                               time_in=current_datetime)
+        if request.user.is_authenticated:
+            text_of_message = self.request.POST.get('text_of_message', 'Undefinded')
+            from django.utils import timezone
+            current_datetime = timezone.now()
+            Message.objects.create(text=text_of_message, user_id=self.request.user.pk, post_id=self.get_object().pk,
+                                   time_in=current_datetime)
 
-        return render(request, 'message_sent_successfully.html')
+            return render(request, 'message_sent_successfully.html')
+        else:
+            return redirect('/accounts/login/')
+
 
 
 class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
     template_name = 'create_post.html'
     form_class = PostForm
-    success_url = reverse_lazy("posts")
+    success_url = reverse_lazy("my_posts")
+
+    def form_valid(self, form):
+        post = form.save(commit=False)  # object of model Post
+        # print(post.category)
+        post.user_id = self.request.user.id
+        return super().form_valid(form)
 
 
 class PostEdit(LoginRequiredMixin, UpdateView):
     model = Post
     template_name = 'update_post.html'
     form_class = PostForm
+    success_url = reverse_lazy('my_posts')
+
+    def form_valid(self, form):
+        post = form.save(commit=False)  # object of model Post
+        # print(post.category)
+        post.user_id = self.request.user.id
+        return super().form_valid(form)
 
 
 class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = 'delete_post.html'
-    success_url = reverse_lazy('posts')
+    success_url = reverse_lazy('my_posts')
 
 
 class MessagesList(LoginRequiredMixin, ListView):
@@ -58,19 +75,18 @@ class MessagesList(LoginRequiredMixin, ListView):
     template_name = 'messages.html'
     context_object_name = 'messages'
     ordering = 'time_in'
-    paginate_by = 10
+    paginate_by = 5
 
     def get_queryset(self):
         posts_of_user = Post.objects.filter(user_id=self.request.user.pk)
         list_of_pk_posts = [post.id for post in posts_of_user]
         qs_messages_of_user = Message.objects.filter(post_id__in=list_of_pk_posts)
-        self.filterset = MessageFilter(self.request.GET, qs_messages_of_user)
+        self.filterset = MessageFilter(self.request.GET, request=self.request, queryset=qs_messages_of_user)
 
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Добавляем в контекст объект фильтрации.
         context['filterset'] = self.filterset
         return context
 
@@ -80,7 +96,7 @@ class MyPostsList(LoginRequiredMixin, ListView):
     template_name = 'my_posts.html'
     context_object_name = 'posts'
     ordering = 'time_in'
-    paginate_by = 10
+    paginate_by = 3
 
     def get_queryset(self):
         posts_of_user = Post.objects.filter(user_id=self.request.user.pk)

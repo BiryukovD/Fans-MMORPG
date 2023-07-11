@@ -1,52 +1,95 @@
 {% extends 'base.html' %}
-{% block title %}
-
-{% endblock title %}
 {% load custom_tags %}
+{% block title %} Главная{% endblock title %}
+
+
 
 {% block content %}
- <h1 align="center">Все публикации</h1>
+<h1 align="center" style="font-family: Georgia, serif;">Все публикации</h1>
+<hr>
 
-   <hr>
-   {% if posts %}
-       <table align="center" width="1200">
-           <tr align="center">
-               <td>Фото</td>
-               <td>Заголовок</td>
-               <td>Дата публикации</td>
-               <td>Текст статьи</td>
-           </tr>
 
-           {% for post in posts %}
-           <tr>
-             <td align="center">  <img src="{{ post.picture.url }}" alt="Not Found" width="600px"></td>
-               <td align="center"><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></td>
-               <td align="center">{{ post.time_in |date:'d M Y' }}</td>
-               <td align="center">{{ post.content |safe|truncatechars:20 }}</td>
-           </tr>
-           {% endfor %}
+{% if posts %}
+{% for post in posts %}
 
-       </table>
-   {% else %}
-       <h2>Статей нет!</h2>
-   {% endif %}
+<div class="container">
 
-{% if page_obj.has_previous %}
-       {# Для каждой ссылки пагинации указываем обработку через новый тег #}
-       <a href="?{% url_replace page=1 %}">1</a>
-       {% if page_obj.previous_page_number != 1 %}
-           ... <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
-       {% endif %}
-   {% endif %}
+          <div class="row">
+    <div class="col-md-8 offset-md-2">
+<!--      <div class="p-3"> <a href="{% url 'post_detail' post.pk %}"><h1>{{ post.title }}</h1></a>-->
+    <div class = "w-100 p-3">
 
-   {{ page_obj.number }}
 
-   {% if page_obj.has_next %}
-       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
-       {% if paginator.num_pages != page_obj.next_page_number %}
-           ...
-           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
-       {% endif %}
-   {% endif %}
+<div class="card mb-3">
+  <img src="{{ post.picture.url }}" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title"><a href="{% url 'post_detail' post.pk %}" style="text-decoration: none; font-family: Georgia, serif; font-size: 23зpx;">{{ post.title }}</a></h5>
+    <p class="card-text">{{ post.content|safe|truncatechars:150 }}</p>
+    <p class="card-text"><small class="text-muted">{{ post.category.name }} <div align="right">{{ post.time_in }}</div></small></p>
+
+  </div>
+</div>
+
+</div>
+
+</div>
+    </div>
+  </div>
+  {% endfor %}
+
+{% else %}
+<h2>Статей нет!</h2>
+
+{% endif %}
+
+
+<nav aria-label="Пример навигации по страницам">
+  <ul class="pagination justify-content-center">
+
+      {% if page_obj.number != 1 %}
+    <li class="page-item">
+      <a class="page-link" href="?{% url_replace page=page_obj.previous_page_number %}">Предыдущая</a>
+            <li class="page-item"><a class="page-link" href="?{% url_replace page=1 %}">1</a></li>
+    </li>
+
+      {% endif %}
+
+
+    {% if page_obj.has_previous %}
+
+      {% if page_obj.previous_page_number != 1 %}
+     <li class="page-item"><a class="page-link" href="#">...</a> </li>
+    <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a></li>
+      {% endif %}
+      {% endif %}
+
+
+         <li class="page-item active" aria-current="page">
+      <a class="page-link" href="#">{{ page_obj.number }}</a>
+    </li>
+
+
+    {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a></li>
+    {% if paginator.num_pages != page_obj.next_page_number %}
+      <li class="page-item"><a class="page-link" href="#">...</a> </li>
+      <li class="page-item"><a class="page-link" href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a></li>
+
+        {% endif %}
+        {% endif %}
+
+
+      {% if paginator.num_pages != page_obj.number %}
+    <li class="page-item">
+      <a class="page-link" href="?{% url_replace page=page_obj.next_page_number %}">Следующая</a>
+    </li>
+      {% endif%}
+  </ul>
+</nav>
+
+
+
+
+
 
 {% endblock content %}
