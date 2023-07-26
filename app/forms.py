@@ -20,11 +20,8 @@ class PostForm(forms.ModelForm):
 class MyCustomSignupForm(SignupForm):
     picture = forms.ImageField(label='Фото профиля')
 
-    def save(self, request):
-        user = super(MyCustomSignupForm, self).save(request)
+    def custom_signup(self, request, user):
         user.picture = self.cleaned_data['picture']
         user.save()
-
-        return user
 
 

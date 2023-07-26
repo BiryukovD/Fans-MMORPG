@@ -20,7 +20,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'posts' %}" >Главная</a>
+          <a class="nav-link"  href="{% url 'posts' %}" >Главная</a>
         </li>
 
         {% if not user.is_authenticated %}
@@ -42,7 +42,7 @@
         </li>
 
               <li class="nav-item">
-                  <a class="nav-link" href="{% url 'messages' %}">Мои сообщения {% if number_messages_of_user %}<span style="height: 25px; width: 30px; border-radius: 50%;display: inline-block;">
+                  <a class="nav-link" href="{% url 'messages' %}">Мои сообщения {% if number_messages_of_user %}<span>
                       +{{ number_messages_of_user }}</span>{% endif %}</a>
               </li>
 
