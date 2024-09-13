@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: .
+    env_file:
+      - .env
+    container_name: django_app
+    command: ["./docker/app.sh"]
+    expose:
+      - "8000"  # Открывает порт 9999 внутри сети Docker, но не на хосте
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/image    
+  nginx:
+    build: ./nginx
+    container_name: nginx_app
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    ports:
+      - "1337:80"
+    depends_on:
+      - app  
+  
+
+
+
+volumes:
+  static_volume:
+  media_volume:
+   
+
+
+
+    

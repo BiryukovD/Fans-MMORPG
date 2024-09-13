@@ -15,8 +15,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+HOST = os.environ.get("HOST")
+PORT = os.environ.get("PORT")
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 SITE_ID = 1
 # Quick-start development settings - unsuitable for production
@@ -26,9 +30,18 @@ SITE_ID = 1
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG")
+ALLOWED_HOSTS = [HOST]
 
-# ALLOWED_HOSTS = ['45.147.177.84']
+CSRF_TRUSTED_ORIGINS = [
+    f'http://{HOST}:{PORT}',
+    f'https://{HOST}:{PORT}',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    f'http://{HOST}:{PORT}',
+]
+
 
 AUTH_USER_MODEL = "app.MyUser"
 # Application definition
@@ -128,7 +141,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'app/static/'
+STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -149,7 +162,7 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'image')
-MEDIA_URL = '/image/'
+MEDIA_URL = 'image/'
 
 AUTHENTICATION_BACKENDS = [
 
@@ -166,7 +179,8 @@ ACCOUNT_SIGNUP_REDIRECT_URL = '/posts/'
 LOGIN_REDIRECT_URL = '/posts/'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # Отключает обязательное подтверждение
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_LOGOUT_REDIRECT_URL = '/posts/'
